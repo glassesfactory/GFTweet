@@ -24,7 +24,7 @@ GFTweetはサーバーサイドスクリプトなしで Flash から twitter の
  【 1 】
 まず、 twitter の API key が必要になりますので、以下URLより
 API key を取得してください。
-(クライアント名が GFTweet で構わない場合はこの項目は必要ないです。)
+
 http://dev.twitter.com/start
 の Register your own Twitter application から。
 
@@ -33,10 +33,6 @@ http://dev.twitter.com/start
 【 2 】
 API key が取得できたら、swf を貼り付ける html の head 領域内に、以下のソースを貼り付けてください。
 <script src="http://platform.twitter.com/anywhere.js?id=取得した API key &v=1" type="text/javascript"></script>
-
-もしくはAPI key 取得がめんどくさい人は以下。
-
-<script src="http://platform.twitter.com/anywhere.js?id=y3i70NZcXFRxBH3gcZ577w&v=1" type="text/javascript"></script>
 
 --------------------------------------------------------
 
