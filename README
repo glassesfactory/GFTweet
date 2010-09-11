@@ -1,0 +1,113 @@
+/*////////////////////////////////////////////////////////////////
+	GFTweet ver. 0.5(α) 
+	README
+	Date : 2010/09/11
+	Autor : YAMAGUCHI EIKICHI (twitter : @glasses_factory)
+	URL : http://glasses-factory.net
+/*////////////////////////////////////////////////////////////////
+
+
+GFTweetはサーバーサイドスクリプトなしで Flash から twitter のほぼすべての機能が使えることを目指したライブラリです。
+
+と偉そうなことを書いていますが
+実際は Anywhere API のアダプタ群と言ったほうが適切かと思われます。
+
+2010/09/11現在、Anywhere API もかなり未実装、ドキュメントが整備されていない部分が多く、容赦なく仕様が変わる可能性が十二分にあります。
+それに合わせて、GFTweet もアルファ版となっておりますので
+ある日突然しようが変わる可能性があることをまずご理解ください。
+
+
+/*==============================================
+ * GFTweet を使うには
+ *==============================================*/ 
+ 
+ 【 1 】
+まず、 twitter の API key が必要になりますので、以下URLより
+API key を取得してください。
+(クライアント名が GFTweet で構わない場合はこの項目は必要ないです。)
+http://dev.twitter.com/start
+の Register your own Twitter application から。
+
+--------------------------------------------------------
+
+【 2 】
+API key が取得できたら、swf を貼り付ける html の head 領域内に、以下のソースを貼り付けてください。
+<script src="http://platform.twitter.com/anywhere.js?id=取得した API key &v=1" type="text/javascript"></script>
+
+もしくはAPI key 取得がめんどくさい人は以下。
+
+<script src="http://platform.twitter.com/anywhere.js?id=y3i70NZcXFRxBH3gcZ577w&v=1" type="text/javascript"></script>
+
+--------------------------------------------------------
+
+【 3 】
+つづけて、GFTweet.js を貼りつけてください。
+<script type="text/javascript" src="GFTweet.js"></script>
+※注意
+先にも書きましたが GFTweet は、  Anywhere API を使用しています。
+必ず先に Anywhere APIを読み込ませてください。
+
+--------------------------------------------------------
+
+【 4 】
+AS側から、 GFTweet.init();
+を叩き、API の読み込みが完了したら GFTweetEvent.ANYWHERE_INITIALIZE がディスパッチされます。
+今回、OAuth 認証を API の読み込みとは意図的にプロセスを分けています。
+実際にアプリケーションとして利用するには、
+GFTweet.signIn();
+から、アプリケーションの認証を行う必要があります。
+
+--------------------------------------------------------
+
+以上が、GFTweet を使うまでの流れです。
+
+
+/*==============================================
+ * GFTweet の使用例
+ *==============================================*/ 
+ 
+ 【 home Timeline の取得 】
+//TLの読み込みをリスナーに登録。
+GFTweet.addEventListener( GFTweetEvent.TIMELINE_LOADED, function( e:GFTweetEvent ):void
+{
+	_statusTxt.appendText("home TL\n" );
+	var result:Array = e.result as Array;
+	for( var i:int = 0; i < _result.length; i++ )
+	{
+		var tweets:GFBasicTweetModel = _modelFactory.createTweetModel( _result[i] ) as GFBasicTweetModel;
+		//名前とつぶやきを出力します。
+		_statusTxt.appendText( "name:" + tweets.userName + " " + tweets.tweet + "\n" );
+	}
+	e.target.removeEventListener( e.type, arguments.callee );
+});
+//100件取得。取得できる最大件数は、 API ドキュメントを参考のこと。
+GFTweet.getHomeTL(100);
+
+-------------------------------------------------------------------
+
+【 つぶやきの送信 】
+GFTweet.addEventListener( GFTweetEvent.TWEET_COMPLETE, function( e:GFTweetEvent ):void{
+//つぶやき成功時の処理
+});
+//つぶやきを送信。
+GFTweet.tweet( "つぶやき本文" );
+
+-------------------------------------------------------------------
+
+
+といった感じです。
+
+
+===========================================================
+
+まだ微妙に足りない機能が幾つかありますが( followする、list 機能など)
+追々追加していくつもりです。
+なにぶん案件用に突貫で作ったので微妙にバグとかがまだあるかと…
+バグの発見や、こここうしてくれたほうが使いやすいんだけど
+腐れたソース書きやがって！などなどありましたら twitter か ブログのコメントなどで
+話しかけてください。
+
+===========================================================
+
+【履歴】
+2010/09/11	GFTweet α版 として一先ずまとめ。各所にアップ。
