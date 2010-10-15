@@ -13,8 +13,6 @@ http://glasses-factory.net
 
 package net.glassesfactory.twitter.model.tweet
 {
-	import mx.skins.halo.ScrollTrackSkin;
-
 	public class GFBasicTweetModel implements IGFTweetModel
 	{
 		/**
