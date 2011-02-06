@@ -80,7 +80,7 @@ package net.glassesfactory.twitter
 		 *--------------------------------------------*/
 		public static function init():GFTweet
 		{
-			if( !ExternalInterface.available ){ throw new Error("GFTweetの実行には、javascriptとやりとりが出来る必要があります。"); }
+			if( !ExternalInterface.available ){ throw new Error("GFTweetの実行には、ExternalInterfaceが有効な状態である必要があります。"); }
 			if( !( _instance != null ))
 			{
 				_instance = new GFTweet( arguments.callee );
@@ -97,6 +97,14 @@ package net.glassesfactory.twitter
 				ExternalInterface.addCallback( "dmSended", _dmSended );
 				ExternalInterface.addCallback( "getMyProfile", _getMyProfile );
 				ExternalInterface.addCallback( "getUserProfile", _getUserProfile );
+				ExternalInterface.addCallback( "follow", _follow );
+				ExternalInterface.addCallback( "unfollow", _unFollow );
+				ExternalInterface.addCallback( "block", _block );
+				ExternalInterface.addCallback( "unBlock", _unBlock );
+				ExternalInterface.addCallback( "spamReport", _spamReport );
+				ExternalInterface.addCallback( "getRelationship", _getRelationship );
+				ExternalInterface.addCallback( "throwError", _throwError );
+				
 				ExternalInterface.call( "GFTweet.init", ExternalInterface.objectID );
 			}
 			return _instance;
@@ -337,6 +345,62 @@ package net.glassesfactory.twitter
 			ExternalInterface.call( "gfAnywhere.userProfile", username );
 		}
 		
+		
+		
+		/*////////////////////////////////////////////////////////////////
+		* follower管理系
+		/*////////////////////////////////////////////////////////////////
+		
+		public static function follow( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.follow", username );
+		}
+		
+		
+		public static function remove( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.remove", username );
+		}
+		
+		
+		public static function block( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.block", username );
+		}
+		
+		
+		public static function unBlock( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.unBlock", username );
+		}
+		
+		
+		public static function spamReport( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.spamReport", username );
+		}
+		
+		
+		public static function isFollowing( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.isFollowing", username );
+		}
+		
+		
+		public static function isFollowedBy( username:String ):void
+		{
+			if( !_isReady ){ return; }
+			ExternalInterface.call( "gfAnywhere.isFollowedBy", username );
+		}
+		
+		
+		
 		public static function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false ):void
 		{
 			_ticker.addEventListener( type, listener, useCapture, priority, useWeakReference );
@@ -346,6 +410,8 @@ package net.glassesfactory.twitter
 		{
 			_ticker.removeEventListener( type, listener, useCapture );
 		}
+		
+		
 		
 		/*/////////////////////////////////
 		* private methods
@@ -358,7 +424,6 @@ package net.glassesfactory.twitter
 		 *---------------------------------------------*/
 		private static function _apiInitialized():void
 		{
-			trace("API Initialized");
 			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.ANYWHERE_INITIALIZE, null, true ));
 		}
 		
@@ -389,9 +454,10 @@ package net.glassesfactory.twitter
 		* @private TL取得
 		/*////////////////////////////////////////////////////////////////
 		
-		private static function _tlLoaded( result:* ):void
+		private static function _tlLoaded( e:* ):void
 		{
-			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.TIMELINE_LOADED, result ));
+			ExternalInterface.call( 'function(e){alert(e)}',e );
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.TIMELINE_LOADED, e ));
 		}
 		
 		/*////////////////////////////////////////////////////////////////
@@ -468,6 +534,74 @@ package net.glassesfactory.twitter
 		private static function _getUserProfile( profile:* ):void
 		{
 			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.GET_USERPROFILE, profile ));
+		}
+		
+		
+		/*////////////////////////////////////////////////////////////////
+		* @private ユーザー操作
+		/*////////////////////////////////////////////////////////////////
+		
+		/**----------------------------------------------
+		 * フォロー操作が完了したことを通知します。
+		 *----------------------------------------------*/
+		private static function _follow():void
+		{
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.FOLLOW_COMPLETE ));
+		}
+		
+		
+		/**----------------------------------------------
+		 * フォロー解除が完了したことを通知します。
+		 *----------------------------------------------*/
+		private static function _unFollow():void
+		{
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.REMOVE_COMPLETE ));
+		}
+		
+		
+		/**----------------------------------------------
+		 * ブロックが完了したことを通知します。
+		 *----------------------------------------------*/
+		private static function _block():void
+		{
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.BLOCK_COMPLETE ));
+		}
+		
+		
+		/**----------------------------------------------
+		 * ブロック解除が完了したことを通知します。
+		 *----------------------------------------------*/
+		private static function _unBlock():void
+		{
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.UN_BLOCK_COMPLETE ));
+		}
+		
+		
+		/**----------------------------------------------
+		 * スパム報告が完了したことを通知します。
+		 *----------------------------------------------*/
+		private static function _spamReport():void
+		{
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.SPAM_REPORT_COMPLETE ));
+		}
+		
+		
+		/**----------------------------------------------
+		 * フォローしている/されているかどうかの取得が完了したことを通知します。
+		 *----------------------------------------------*/
+		private static function _getRelationship( result:* ):void
+		{
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.GET_RELATIONSHIP, result ));
+		}
+		
+		
+		/**
+		 * エラー処理
+		 */
+		private static function _throwError( error:* ):void
+		{
+			ExternalInterface.call( 'function(){ alert("えらー")}');
+			_ticker.dispatchEvent( new GFTweetEvent( GFTweetEvent.API_ERROR, error ));
 		}
 		
 		
