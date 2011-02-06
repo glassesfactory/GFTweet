@@ -28,7 +28,7 @@ package net.glassesfactory.twitter
 		/*/////////////////////////////////
 		
 		/**<p>どっちかっていうとAnywhereの方がまだ仕様が発表されてても未実装な部分が多い。</p>*/
-		public static const VERSION:String = "0.5";
+		public static const VERSION:String = "0.55";
 		
 		
 		/*/////////////////////////////////

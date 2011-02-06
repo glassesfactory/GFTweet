@@ -1,5 +1,5 @@
 /*////////////////////////////////////////////////////////////////
-	GFTweet ver. 0.5(α) 
+	GFTweet ver. 0.55(α) 
 	README
 	Date : 2010/09/11
 	Autor : YAMAGUCHI EIKICHI (twitter : @glasses_factory)
@@ -11,6 +11,15 @@ GFTweetはサーバーサイドスクリプトなしで Flash から twitter の
 
 と偉そうなことを書いていますが
 実際は Anywhere API のアダプタ群と言ったほうが適切かと思われます。
+
+
+【緩募 2011/02/06】
+現在何故か Windows 版 Safari では、取得したデータが null になってしまう不具合が出ています。
+Flash 側へのデータ引渡し方法は、 GFTwitterUserTLProxy と同じなのですが、こちらでは同じような不具合は報告されていません。
+もし原因等思い当たる方が入れば、ご教授いただけると幸いです。
+
+https://github.com/glassesfactory/glassesfactory/blob/master/src/net/glassesfactory/net/GFTwitterUserTLProxy.as
+
 
 2010/09/11現在、Anywhere API もかなり未実装、ドキュメントが整備されていない部分が多く、容赦なく仕様が変わる可能性が十二分にあります。
 それに合わせて、GFTweet もアルファ版となっておりますので
@@ -106,4 +115,7 @@ GFTweet.tweet( "つぶやき本文" );
 ===========================================================
 
 【履歴】
+2011/02/06	ユーザー操作系を追加しておいてアップするのをずっと忘れていたのでアップ。
+			ヘルプ周りは後ほど。
+
 2010/09/11	GFTweet α版 として一先ずまとめ。各所にアップ。
